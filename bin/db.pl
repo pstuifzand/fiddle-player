@@ -4,7 +4,7 @@ use Storable;
 use Data::Dumper;
 
 use lib 'lib';
-use MP::Song;
+use Fiddle::Song;
 
 my $db = retrieve('music.db');
 

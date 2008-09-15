@@ -14,6 +14,11 @@ Fiddle commands:
   pause                 pause playing
   update                update the database
   rate  [0-5]           rate a song
+  random  on|off        plays songs randomly
+  repeat  on|off        repeats current playlist
+  quit                  shuts down fiddle server
+
+For more information go take a look at: http://fiddle-player.net/
 
 USAGE
 

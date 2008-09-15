@@ -1,10 +1,10 @@
 #!/usr/bin/perl -w
 use lib 'lib';
 
-use MP::Playlist;
+use Fiddle::Playlist;
 use Data::Dumper;
 
-my $playlist = MP::Playlist->new();
+my $playlist = Fiddle::Playlist->new();
 
 eval {
     $playlist->add_file($ARGV[0]);
