@@ -1,0 +1,32 @@
+#!/usr/bin/perl -w
+
+use IO::Socket;
+
+if (!@ARGV) {
+    print <<"USAGE";
+Usage: fiddle [command]
+
+Fiddle commands:
+  playlist [playlist]   load an automatic playlist
+  play                  play the current playlist
+  next                  next song
+  prev                  previous song
+  pause                 pause playing
+  update                update the database
+  rate  [0-5]           rate a song
+
+USAGE
+
+
+}
+
+
+my $cmd = join " ", @ARGV;
+
+my $client = IO::Socket::INET->new(
+    PeerAddr => '127.0.0.1',
+    PeerPort => 12345,
+);
+
+print {$client} $cmd . "\n";
+
