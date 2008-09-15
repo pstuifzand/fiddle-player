@@ -9,11 +9,11 @@ use POE::Component::Server::TCP;
 use GStreamer -init;
 use Data::Dumper;
 
-use MP::Config;
-use MP::DB;
-use MP::Playlist;
-use MP::AutoPlaylist;
-use MP::Playlist::Parser;
+use Fiddle::Config;
+use Fiddle::DB;
+use Fiddle::Playlist;
+use Fiddle::AutoPlaylist;
+use Fiddle::Playlist::Parser;
 
 POE::Session->create(
     inline_states => {
@@ -21,12 +21,12 @@ POE::Session->create(
             my ($heap, $kernel, $session) = @_[HEAP, KERNEL, SESSION];
             $kernel->alias_set('player');
 
-            my $config_dir = $ENV{HOME} . '/.mp/';
+            my $config_dir = $ENV{HOME} . '/.fiddle/';
             $heap->{config_dir} = $config_dir;
 
             print STDERR "Using config_dir $config_dir\n";
 
-            my $config = MP::Config->new($config_dir . '/config.yml');
+            my $config = Fiddle::Config->new($config_dir . '/config.yml');
             $heap->{config} = $config;
 
             my $play = GStreamer::ElementFactory->make("playbin", "play");
@@ -39,7 +39,7 @@ POE::Session->create(
             my $db_file = $config_dir . '/db/music.db';
 
             print STDERR "Loading database $db_file\n";
-            $heap->{db} = MP::DB->new_from_filename($db_file);
+            $heap->{db} = Fiddle::DB->new_from_filename($db_file);
 
             $heap->{stopping} = 0;
             $heap->{db}->save();
@@ -56,7 +56,7 @@ POE::Session->create(
         load_playlist => sub {
             my ($heap, $filename) = @_[HEAP, ARG0];
 
-            my $parser = MP::Playlist::Parser->new();
+            my $parser = Fiddle::Playlist::Parser->new();
 
             my $playlist_dir = $heap->{config_dir} . '/playlists/';
 
@@ -66,7 +66,7 @@ POE::Session->create(
 
             print Dumper($query);
 
-            $heap->{playlist} = MP::AutoPlaylist->new($heap->{db});
+            $heap->{playlist} = Fiddle::AutoPlaylist->new($heap->{db});
 
             $heap->{playlist}->set_query_func(sub {
                 my ($db) = @_;

@@ -1,9 +1,9 @@
-package MP::Rule::Match;
+package Fiddle::Rule::Match;
 
 use strict;
 use warnings;
 
-use base 'MP::Rule';
+use base 'Fiddle::Rule';
 use Carp;
 use Data::Dumper;
 

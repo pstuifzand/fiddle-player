@@ -1,4 +1,4 @@
-package MP::Playlist::Parser;
+package Fiddle::Playlist::Parser;
 
 use strict;
 use warnings;
@@ -6,8 +6,8 @@ use warnings;
 use Carp;
 use Data::Dumper;
 
-use MP::Query;
-use MP::Rule::Match;
+use Fiddle::Query;
+use Fiddle::Rule::Match;
 
 sub new {
     my ($klass) = @_;
@@ -26,7 +26,7 @@ sub parse_line {
     $line =~ s/^\s+//;
 
     if ($line =~ m{^([a-z][a-z0-9_]*)\s+((?:not\s+)?match)\s+/([^/]+)/$}) {
-        return { class => 'MP::Rule::Match', args => { attribute => $1, operator => $2, regex => qr/$3/ } };
+        return { class => 'Fiddle::Rule::Match', args => { attribute => $1, operator => $2, regex => qr/$3/ } };
     }
     elsif ($line =~ m{^name\s+(.+)$}) {
         return { type => 'name', name => $1 };
@@ -41,7 +41,7 @@ sub parse_line {
         return { type => 'end' };
     }
     elsif ($line =~ m{^match\s+(any|all)$}) {
-        return { subrule => 1, class => 'MP::Query', args => { type => $1 }  };
+        return { subrule => 1, class => 'Fiddle::Query', args => { type => $1 }  };
     }
 
     return;
@@ -54,7 +54,7 @@ sub parse {
 
     my @query_tree;
 
-    unshift @query_tree, MP::Query->new();
+    unshift @query_tree, Fiddle::Query->new();
 
     open my $fh, '<', $filename or croak "Can't open $filename: $!";
 

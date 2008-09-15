@@ -1,9 +1,9 @@
-package MP::AutoPlaylist;
+package Fiddle::AutoPlaylist;
 
 use strict;
 use warnings;
 
-use base 'MP::Playlist';
+use base 'Fiddle::Playlist';
 
 sub set_query_func {
     my ($self, $query) = @_;

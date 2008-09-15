@@ -1,4 +1,4 @@
-package MP::Song;
+package Fiddle::Song;
 
 use strict;
 use warnings;

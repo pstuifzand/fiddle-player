@@ -1,4 +1,4 @@
-package MP::DB;
+package Fiddle::DB;
 use strict;
 use warnings;
 
@@ -6,7 +6,7 @@ use Carp;
 use Storable;
 use File::Next;
 
-use MP::Song;
+use Fiddle::Song;
 
 sub new_from_filename {
     my ($klass, $filename) = @_;
@@ -34,7 +34,7 @@ sub get_file_info {
 
     if (!exists $self->{db}->{$filename}) {
         eval {
-            $self->{db}->{$filename} = MP::Song->new_from_filename($filename);
+            $self->{db}->{$filename} = Fiddle::Song->new_from_filename($filename);
         };
         if ($@) {
             delete $self->{db}->{$filename};

@@ -1,10 +1,10 @@
-package MP::Playlist;
+package Fiddle::Playlist;
 
 use strict;
 use warnings;
 
 use Carp;
-use MP::Song;
+use Fiddle::Song;
 
 sub new {
     my $klass = shift;

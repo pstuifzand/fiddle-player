@@ -1,4 +1,4 @@
-package MP::Query;
+package Fiddle::Query;
 
 use strict;
 use warnings;

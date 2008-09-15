@@ -1,4 +1,4 @@
-package MP::Config;
+package Fiddle::Config;
 use strict;
 use warnings;
 

@@ -1,4 +1,4 @@
-package MP::Rule;
+package Fiddle::Rule;
 use strict;
 use warnings;
 
