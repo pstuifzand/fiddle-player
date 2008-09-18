@@ -13,6 +13,7 @@ sub new_from_filename {
 
     my $self = bless {}, $klass;
     $self->{filename} = $filename;
+
     if (-e $filename) {
         $self->{db} = retrieve($filename);
     }
