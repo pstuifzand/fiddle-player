@@ -37,6 +37,13 @@ sub new {
                 $heap->{stopping} = 0;
                 $heap->{db}->save();
 
+                $heap->{playlist} = Fiddle::AutoPlaylist->new($heap->{db});
+
+                $heap->{playlist}->set_query_func(sub {
+                    my ($db) = @_; return $db->songs();
+                });
+                $heap->{playlist}->refresh();
+
                 $_[KERNEL]->sig( INT => 'sig_INT' );
             },
 
@@ -94,8 +101,6 @@ sub new {
                     return;
                 }
 
-                #print Dumper($args1);
-
                 my ($bus, $message) = @$args1;
 
                 if ($message->type & "error") {
@@ -112,8 +117,12 @@ sub new {
             play => sub {
                 my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
 
+                if (!$heap->{playlist}) {
+                    print "No playlist";
+                }
+
                 my $song = $heap->{playlist}->current_song();
-                print Dumper($song);
+
                 if ($song) {
                     print "Starting " . $song->to_string() . "\n";
 
