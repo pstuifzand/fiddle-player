@@ -4,8 +4,12 @@ use strict;
 use warnings;
 
 use Carp;
-use AudioFile::Info;
 use Date::Format;
+
+use Fiddle::Song::MP3;
+#use Fiddle::Song::OGG;
+#use Fiddle::Song::FLAC;
+
 
 sub new {
     my ($klass, $songinfo) = @_;
@@ -18,10 +22,20 @@ sub new {
     return bless $self, $klass;
 }
 
+sub klass_from_filename {
+    my ($filename) = @_;
+    if (my ($ext) = $filename =~ m/\.(mp3|flac|ogg)$/) {
+        return 'Fiddle::Song::' . uc $ext;
+    }
+    die "Can't find class for loading $filename";
+}
+
 sub new_from_filename {
     my ($klass, $filename) = @_;
 
-    my $song = AudioFile::Info->new($filename);
+    my $song_klass = klass_from_filename($filename);
+
+    my $song = $song_klass->new($filename);
 
     my $info = {
         title    => $song->title || 'Unknown',
