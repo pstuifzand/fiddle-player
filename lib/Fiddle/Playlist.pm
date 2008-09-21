@@ -14,10 +14,11 @@ sub new {
 
     $self->{db}      = $db;
     $self->{items}   = [];
-    $self->{current} = 0;
+    $self->{current} = -1;
+    $self->{shuffle} = 0;
+    $self->{repeat}  = 0;
 
     return $self;
-
 };
 
 sub refresh {
@@ -109,12 +110,22 @@ sub prev_item {
 
 sub current_file {
     my $self = shift;
-    return $self->{items}->[$self->{current}]->filename();
+    return $self->current_song()->filename();
 }
 
 sub current_song {
     my $self = shift;
+
+    if ($self->{current} < 0) {
+        if ($self->{shuffle}) {
+            $self->{current} = int(rand($self->length()));
+        }
+        else {
+            $self->{current} = 0;
+        }
+    }
     return $self->{items}->[$self->{current}];
 }
 
 1;
+
