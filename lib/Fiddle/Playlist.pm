@@ -84,9 +84,10 @@ sub next_item {
 
     if ($self->{shuffle}) {
         $self->{current} = int(rand($self->length()));
+        return 1;
     }
     else {
-        $self->{current}+=1;
+        $self->{current} += 1;
     }
 
     if ($self->{current} >= $self->length()) {
@@ -104,7 +105,9 @@ sub next_item {
 
 sub prev_item {
     my $self = shift;
-    $self->{current} -= 1;
+    if ($self->{current} > 0) {
+        $self->{current} -= 1;
+    }
     return;
 }
 

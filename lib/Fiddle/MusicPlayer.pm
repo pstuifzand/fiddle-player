@@ -129,6 +129,7 @@ sub new {
                     $song->played();
 
                     my $play = $heap->{play};
+                    $play->set_state("null");
                     $play->set(uri => Glib::filename_to_uri($song->filename(), "localhost"));
                     $play->set_state("playing");
                 }
@@ -159,7 +160,6 @@ sub new {
                     return;
                 }
 
-                $play->set_state("null");
                 $kernel->yield('play');
                 return;
             },
@@ -173,8 +173,6 @@ sub new {
                 $song->skipped();
 
                 $playlist->prev_item();
-
-                $play->set_state("null");
 
                 $kernel->yield('play');
                 return;
