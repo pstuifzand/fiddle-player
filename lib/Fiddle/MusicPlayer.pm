@@ -153,7 +153,9 @@ sub new {
                 my $play = $heap->{play};
 
                 my $song = $heap->{playlist}->current_song();
-                $song->skipped();
+                if ($song) {
+                    $song->skipped();
+                }
 
                 if (!$playlist->next_item()) {
                     $play->set_state("paused");
