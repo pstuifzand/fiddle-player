@@ -46,6 +46,20 @@ sub get_file_info {
     return $self->{db}->{$filename};
 }
 
+sub update_file_info {
+    my ($self, $filename) = @_;
+
+    eval {
+        $self->{db}->{$filename} = Fiddle::Song->new_from_filename($filename);
+    };
+    if ($@) {
+        delete $self->{db}->{$filename};
+        croak $@;
+    }
+
+    return $self->{db}->{$filename};
+}
+
 sub songs {
     my ($self) = @_;
     return values(%{$self->{db}});
@@ -79,7 +93,7 @@ sub update {
     while (my $file = $files->()) {
         eval {
             print STDERR $file . "\n";
-            my $info = $self->get_file_info($file);
+            my $info = $self->update_file_info($file);
         };
         if ($@) {
             print STDERR "For $file: $@\n";
