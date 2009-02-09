@@ -31,7 +31,7 @@ sub klass_from_filename {
 }
 
 sub new_from_filename {
-    my ($klass, $filename) = @_;
+    my ($klass, $filename, $previous) = @_;
 
     my $song_klass = klass_from_filename($filename);
 
@@ -45,6 +45,8 @@ sub new_from_filename {
         year     => $song->year || 0,
         genre    => $song->genre || '',
         filename => $filename,
+        play_count => $previous ? $previous->{play_count} : 0,
+        skip_count => $previous ? $previous->{skip_count} : 0,
     };
 
     return $klass->new($info);

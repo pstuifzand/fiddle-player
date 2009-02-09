@@ -34,13 +34,8 @@ sub get_file_info {
     my ($self, $filename) = @_;
 
     if (!exists $self->{db}->{$filename}) {
-        eval {
-            $self->{db}->{$filename} = Fiddle::Song->new_from_filename($filename);
-        };
-        if ($@) {
-            delete $self->{db}->{$filename};
-            croak $@;
-        }
+        my $info = $self->update_file_info($filename);
+        return $info;
     }
 
     return $self->{db}->{$filename};
@@ -50,7 +45,9 @@ sub update_file_info {
     my ($self, $filename) = @_;
 
     eval {
-        $self->{db}->{$filename} = Fiddle::Song->new_from_filename($filename);
+        # TODO: If exists some kind of merge.
+        my $previous = $self->{db}->{$filename};
+        $self->{db}->{$filename} = Fiddle::Song->new_from_filename($filename, $previous);
     };
     if ($@) {
         delete $self->{db}->{$filename};
