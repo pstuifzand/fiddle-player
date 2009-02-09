@@ -37,7 +37,7 @@ sub artist {
 
 sub album {
     my $self = shift;
-    return $self->{ablum};
+    return $self->{album};
 }
 
 sub track {
