@@ -9,6 +9,8 @@ use Fiddle::DB;
 use Fiddle::Playlist;
 use Fiddle::AutoPlaylist;
 use Fiddle::Playlist::Parser;
+use Log::Dispatch;
+use Log::Dispatch::File::Stamped;
 
 sub new {
     my ($klass) = @_;
@@ -18,6 +20,11 @@ sub new {
             _start => sub {
                 my ($heap, $kernel, $session) = @_[HEAP, KERNEL, SESSION];
                 $kernel->alias_set('player');
+
+                $heap->{logger} = Log::Dispatch->new();
+                $heap->{logger}->add(Log::Dispatch::File::Stamped->new(name => 'file1', min_level => 'debug', filename => 'fiddle.log'));
+
+                $heap->{logger}->info(localtime() . " Loading config\n");
 
                 my $config = Fiddle::Config->new();
                 $heap->{config} = $config;
@@ -31,7 +38,7 @@ sub new {
 
                 my $db_file = $heap->{config}->music_database();
 
-                print STDERR "Loading database $db_file\n";
+                $heap->{logger}->info(localtime() . " Loading database $db_file\n");
                 $heap->{db} = Fiddle::DB->new_from_filename($db_file);
 
                 $heap->{stopping} = 0;
@@ -77,16 +84,16 @@ sub new {
                 my ($heap, $kernel) = @_[HEAP, KERNEL];
 
                 $heap->{play}->set_state("null");
-                print "Saving database\n";
+                $heap->{logger}->info(localtime() . " Saving database\n");
                 $heap->{db}->save();
 
-                print "Removing player alias\n";
+                $heap->{logger}->debug(localtime() . " Removing player alias\n");
                 $_[KERNEL]->alias_remove('player');
 
-                print "Sending tcp_server shutdown\n";
+                $heap->{logger}->info(localtime(). " Sending tcp_server shutdown\n");
                 $kernel->post('tcp_server'=>'shutdown');
 
-                print "Disconnecting bus message handler\n";
+                $heap->{logger}->info(localtime() . " Disconnecting bus message handler\n");
                 $heap->{bus}->disconnect('message');
                 
                 $kernel->sig_handled();
@@ -118,13 +125,13 @@ sub new {
                 my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
 
                 if (!$heap->{playlist}) {
-                    print "No playlist";
+                    $heap->{logger}->warning(localtime() . " No playlist\n");
                 }
 
                 my $song = $heap->{playlist}->current_song();
 
                 if ($song) {
-                    print "Starting " . $song->to_string() . "\n";
+                    $heap->{logger}->info(localtime() . " Starting " . $song->to_string() . "\n");
 
                     $song->played();
 
@@ -134,7 +141,7 @@ sub new {
                     $play->set_state("playing");
                 }
                 else {
-                    print "No song in playlist\n";
+                    $heap->{logger}->info(localtime() . " No song in playlist\n");
                 }
 
                 return;
