@@ -25,7 +25,7 @@ POE::Component::Server::TCP->new(
     ClientConnected => sub {
         my ($heap, $args) = @_[HEAP, ARG0];
 
-        print "got a connection from $heap->{remote_ip}\n";
+        #print "got a connection from $heap->{remote_ip}\n";
         $heap->{client}->put("connected");
 
         $heap->{player_session} = $args->[0];
@@ -74,13 +74,15 @@ POE::Component::Server::TCP->new(
         }
     },
     ClientDisconnected => sub {
-        print "client from $_[HEAP]{remote_ip} disconnected\n";
+        #print "client from $_[HEAP]{remote_ip} disconnected\n";
     },
     InlineStates => {
         rate_ok => sub {
             my ($heap, $kernel, $args) = @_[HEAP, KERNEL, ARG1];
             $heap->{client}->put("+ok rate " . $args->[0]);
         },
+    },
+    ClientError => sub {
     },
 );
 
