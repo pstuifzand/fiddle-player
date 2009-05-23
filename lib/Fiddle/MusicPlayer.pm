@@ -22,7 +22,7 @@ sub new {
                 $kernel->alias_set('player');
 
                 $heap->{logger} = Log::Dispatch->new();
-                $heap->{logger}->add(Log::Dispatch::File::Stamped->new(name => 'file1', min_level => 'debug', filename => 'fiddle.log'));
+                $heap->{logger}->add(Log::Dispatch::File::Stamped->new(name => 'file1', min_level => 'debug', filename => 'logs/fiddle.log'));
 
                 $heap->{logger}->info(localtime() . " Loading config\n");
 
