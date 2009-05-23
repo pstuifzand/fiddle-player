@@ -3,6 +3,7 @@ package Fiddle::Query;
 use strict;
 use warnings;
 
+use Carp;
 use List::Util qw/shuffle/;
 
 sub new {
@@ -31,6 +32,7 @@ sub match {
         }
         return;
     }
+    croak "Unknown query type '$type'";
 }
 
 sub rules {
@@ -41,6 +43,7 @@ sub rules {
 sub add_rule {
     my ($self, $rule) = @_;
     push @{$self->{rules}}, $rule;
+    return;
 }
 
 sub set_order {
@@ -95,6 +98,7 @@ sub order_function {
 sub set_name {
     my ($self, $name) = @_;
     $self->{name} = $name;
+    return;
 }
 
 1;
