@@ -21,10 +21,7 @@ Fiddle commands:
 For more information go take a look at: http://fiddle-player.net/
 
 USAGE
-
-
 }
-
 
 my $cmd = join " ", @ARGV;
 
