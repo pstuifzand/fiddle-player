@@ -32,7 +32,7 @@ sub match {
         }
         return;
     }
-    croak "Unknown query type '$type'";
+    croak "Unknown query type '$self->{type}'";
 }
 
 sub rules {
