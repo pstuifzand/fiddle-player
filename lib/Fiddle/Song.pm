@@ -86,4 +86,17 @@ sub skipped {
     return;
 }
 
+sub artist {
+    my $self = shift;
+    return $self->{artist};
+}
+sub album {
+    my $self = shift;
+    return $self->{album};
+}
+sub title {
+    my $self = shift;
+    return $self->{title};
+}
+
 1;

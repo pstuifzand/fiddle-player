@@ -11,6 +11,7 @@ use POE::Component::Server::TCP;
 use GStreamer -init;
 use Privileges::Drop;
 
+use Data::Dumper;
 use Fiddle::MusicPlayer;
 
 drop_uidgid(1000, 1000);
@@ -26,10 +27,6 @@ POE::Component::Server::TCP->new(
 
     ClientConnected => sub {
         my ($heap, $args) = @_[HEAP, ARG0];
-
-        #print "got a connection from $heap->{remote_ip}\n";
-        $heap->{client}->put("connected");
-
         $heap->{player_session} = $args->[0];
         return;
     },
@@ -56,6 +53,7 @@ POE::Component::Server::TCP->new(
         }
         elsif ($client_input =~ m/^quit\b/) {
             $kernel->post($heap->{player_session}, 'quit');
+            $_[HEAP]{client}->put("+ok");
             $kernel->post('server' => "shutdown" );
         }
         elsif ($client_input =~ m/^playlist\s+(\w+)$/) {
@@ -72,19 +70,34 @@ POE::Component::Server::TCP->new(
         }
         elsif ($client_input =~ m/^update$/) {
             $kernel->post($heap->{player_session}, 'update');
-            $_[HEAP]{client}->put("+ok updating");
+            $_[HEAP]{client}->put("+ok");
+        }
+        elsif ($client_input =~ m/^status$/) {
+            $kernel->post($heap->{player_session}, 'status', $session->postback('status_ok'));
         }
     },
     ClientDisconnected => sub {
-        #print "client from $_[HEAP]{remote_ip} disconnected\n";
     },
+
+    ClientError => sub {
+    },
+
     InlineStates => {
         rate_ok => sub {
             my ($heap, $kernel, $args) = @_[HEAP, KERNEL, ARG1];
-            $heap->{client}->put("+ok rate " . $args->[0]);
+            $heap->{client}->put("+ok");
         },
-    },
-    ClientError => sub {
+
+        status_ok => sub {
+            my ($heap, $args) = @_[HEAP, ARG1];
+            my ($song) = @$args;
+
+            $heap->{client}->put("Artist: " . $song->artist());
+            $heap->{client}->put("Title:  " . $song->title());
+            $heap->{client}->put("Album:  " . $song->album());
+
+            $heap->{client}->put("+ok");
+        },
     },
 );
 

@@ -23,6 +23,18 @@ For more information go take a look at: http://fiddle-player.net/
 USAGE
 }
 
+sub send_command {
+    my ($client, $cmd) = @_;
+    
+    print {$client} $cmd . "\n";
+
+    while (<$client>) {
+        last if m/^\+ok\s*$/;
+        print $_;
+    }
+    return;
+}
+
 if (!@ARGV) {
     # display status
     exit;
@@ -40,10 +52,10 @@ my $client = IO::Socket::INET->new(
     PeerPort => 12345,
 );
 
-print {$client} $cmd . "\n";
+send_command($client, $cmd);
 
-while (<$client>) {
-    last if m/^\+ok\s*$/;
-    print $_;
+if ($cmd ne 'status') {
+    send_command($client, 'status');
 }
+
 

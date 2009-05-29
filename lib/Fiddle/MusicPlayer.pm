@@ -223,9 +223,19 @@ sub new {
                 $heap->{db}->update($music_dir);
                 return;
             },
+
+            status => sub {
+                my ($kernel, $heap, $callback) = @_[KERNEL,HEAP,ARG0];
+
+                my $song = $heap->{playlist}->current_song();
+                if ($song) {
+                    $callback->($song);
+                }
+            }
         },
     );
     return 'player';
 }
 
 1;
+
