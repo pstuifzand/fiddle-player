@@ -8,7 +8,6 @@ case "$1" in
     cd /home/peter/work/fiddle
     bin/fiddled &
     echo $! > /var/run/fiddle.pid
-    fiddle random on
     ;;
   stop)
     echo "Stopping fiddle daemon"
