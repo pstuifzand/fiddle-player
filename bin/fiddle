@@ -35,12 +35,11 @@ sub send_command {
     return;
 }
 
-if (!@ARGV) {
-    # display status
-    exit;
-}
-
 my $cmd = join " ", @ARGV;
+
+if (!@ARGV) {
+    $cmd = 'status';
+}
 
 if ($cmd eq 'help') {
     usage();
