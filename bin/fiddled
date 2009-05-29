@@ -7,12 +7,14 @@ use lib 'lib';
 
 use Glib;
 use POE qw/Loop::Glib/;
-
 use POE::Component::Server::TCP;
 use GStreamer -init;
-use Data::Dumper;
+use Privileges::Drop;
 
 use Fiddle::MusicPlayer;
+
+drop_uidgid(1000, 1000);
+
 
 my $player_session_id = Fiddle::MusicPlayer->new();
 
