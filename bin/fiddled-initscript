@@ -1,0 +1,25 @@
+#! /bin/sh
+# /etc/init.d/fiddle
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting fiddle daemon"
+    cd /home/peter/work/fiddle
+    bin/fiddled &
+    echo $! > /var/run/fiddle.pid
+    fiddle random on
+    ;;
+  stop)
+    echo "Stopping fiddle daemon"
+    kill `cat /var/run/fiddle.pid`
+    rm /var/run/fiddle.pid
+    ;;
+  *)
+    echo "Usage: /etc/init.d/fiddle {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
