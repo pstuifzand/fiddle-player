@@ -20,7 +20,7 @@ drop_uidgid(1000, 1000);
 my $player_session_id = Fiddle::MusicPlayer->new();
 
 POE::Component::Server::TCP->new(
-    Args  => [ $player_session_id ],
+    ClientArgs  => [ $player_session_id ],
 
     Alias => 'tcp_server',
     Port  => 12345,
